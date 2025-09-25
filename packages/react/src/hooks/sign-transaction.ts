@@ -2,13 +2,7 @@
 "use client";
 
 import { useWalletAccountTransactionSendingSigner } from "@solana/react";
-import {
-  appendTransactionMessageInstruction,
-  createTransactionMessage,
-  setTransactionMessageFeePayerSigner,
-  setTransactionMessageLifetimeUsingBlockhash,
-  signAndSendTransactionMessageWithSigners,
-} from "gill";
+import { createTransaction, signTransactionMessageWithSigners } from "gill";
 
 import { useSolanaClient } from "./client.js";
 import { useWallet } from "./wallet.js";
@@ -21,26 +15,28 @@ interface UseSignTransactionReturn {
 
 export function useGillSignTransaction(): UseSignTransactionReturn {
   const { account } = useWallet();
-  const { rpc } = useSolanaClient();
+  const { rpc, cluster } = useSolanaClient();
 
-  const chain = "solana:devnet";
+  console.log({ account });
 
+  const chain = `solana:${cluster}` as const;
   const signer = account ? useWalletAccountTransactionSendingSigner(account, chain) : undefined;
 
   async function signTransaction(instructions: any[]) {
     if (!account || !signer) throw new Error("Wallet not connected");
+    console.log({ account });
+    console.log({ cluster, rpc });
 
     const { value: latestBlockhash } = await rpc.getLatestBlockhash().send();
 
-    let message: any = createTransactionMessage({ version: "legacy" });
-    message = setTransactionMessageFeePayerSigner(signer, message);
-    message = setTransactionMessageLifetimeUsingBlockhash(latestBlockhash, message);
+    const tx = createTransaction({
+      feePayer: signer,
+      instructions,
+      latestBlockhash,
+      version: "legacy",
+    });
 
-    for (const ix of instructions) {
-      message = appendTransactionMessageInstruction(ix, message);
-    }
-
-    return await signAndSendTransactionMessageWithSigners(message);
+    return await signTransactionMessageWithSigners(tx);
   }
 
   return { account, signTransaction, signer };
