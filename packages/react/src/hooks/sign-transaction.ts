@@ -19,7 +19,7 @@ interface UseSignTransactionReturn {
   signer: ReturnType<typeof useWalletAccountTransactionSendingSigner> | undefined;
 }
 
-export function useSignTransaction(): UseSignTransactionReturn {
+export function useGillSignTransaction(): UseSignTransactionReturn {
   const { account } = useWallet();
   const { rpc } = useSolanaClient();
 
