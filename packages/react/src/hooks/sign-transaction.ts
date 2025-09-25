@@ -23,7 +23,7 @@ export function useSignTransaction(): UseSignTransactionReturn {
   const { account } = useWallet();
   const { rpc } = useSolanaClient();
 
-  const chain = (account?.chains[0] ?? "solana:devnet") as `solana:${string}`;
+  const chain = "solana:devnet";
 
   const signer = account ? useWalletAccountTransactionSendingSigner(account, chain) : undefined;
 
