@@ -1,47 +1,40 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useWalletAccountTransactionSendingSigner } from "@solana/react";
-import {
-  appendTransactionMessageInstruction,
-  createTransactionMessage,
-  setTransactionMessageFeePayerSigner,
-  setTransactionMessageLifetimeUsingBlockhash,
-  signAndSendTransactionMessageWithSigners,
-} from "gill";
+import type { Transaction } from "gill";
+import { getTransactionCodec } from "gill";
 
-import { useSolanaClient } from "./client.js";
 import { useWallet } from "./wallet.js";
 
-interface UseSignTransactionReturn {
-  account: ReturnType<typeof useWallet>["account"];
-  signTransaction: (instructions: any[]) => Promise<any>;
-  signer: ReturnType<typeof useWalletAccountTransactionSendingSigner> | undefined;
-}
-
-export function useGillSignTransaction(): UseSignTransactionReturn {
+export function useGillSignTransaction() {
   const { account } = useWallet();
-  const { rpc } = useSolanaClient();
+  const codec = getTransactionCodec();
 
-  const chain = "solana:devnet";
+  async function signTransaction(tx: Transaction): Promise<Uint8Array> {
+    if (!account) throw new Error("Wallet not connected");
+    console.log({ accountFromHook: account });
 
-  const signer = account ? useWalletAccountTransactionSendingSigner(account, chain) : undefined;
+    console.log({ txFromHook: tx });
 
-  async function signTransaction(instructions: any[]) {
-    if (!account || !signer) throw new Error("Wallet not connected");
+    try {
+      // Encode the Transaction → Uint8Array
+      console.log("trying to encode");
 
-    const { value: latestBlockhash } = await rpc.getLatestBlockhash().send();
+      const txBytes = codec.encode(tx);
+      console.log({ txBytesFromHook: txBytes });
 
-    let message: any = createTransactionMessage({ version: "legacy" });
-    message = setTransactionMessageFeePayerSigner(signer, message);
-    message = setTransactionMessageLifetimeUsingBlockhash(latestBlockhash, message);
+      // @ts-expect-error wallet-standard method exists
+      const signed: Uint8Array = await account.signTransaction(txBytes);
 
-    for (const ix of instructions) {
-      message = appendTransactionMessageInstruction(ix, message);
+      console.log({ signedFromHook: signed });
+
+      return signed;
+    } catch (error: any) {
+      // Map errors in a friendly way
+      console.error("Transaction signing failed:", error);
+      throw new Error(error?.message || "Failed to sign transaction");
     }
-
-    return await signAndSendTransactionMessageWithSigners(message);
   }
 
-  return { account, signTransaction, signer };
+  return { account, signTransaction };
 }
