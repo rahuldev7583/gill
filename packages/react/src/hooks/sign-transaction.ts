@@ -1,40 +1,35 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import type { Transaction } from "gill";
-import { getTransactionCodec } from "gill";
+import { useWalletAccountTransactionSigner } from "@solana/react";
+import { getTransactionCodec, Transaction } from "gill";
 
 import { useWallet } from "./wallet.js";
 
-export function useGillSignTransaction() {
+interface UseSignTransactionReturn {
+  account: ReturnType<typeof useWallet>["account"];
+  signTransaction: (tx: Transaction) => Promise<Uint8Array>;
+  signer: ReturnType<typeof useWalletAccountTransactionSigner> | undefined;
+}
+
+export function useGillSignTransaction(): UseSignTransactionReturn {
   const { account } = useWallet();
-  const codec = getTransactionCodec();
+
+  const chain = "solana:devnet";
+  const signer = account ? useWalletAccountTransactionSigner(account, chain) : undefined;
 
   async function signTransaction(tx: Transaction): Promise<Uint8Array> {
-    if (!account) throw new Error("Wallet not connected");
-    console.log({ accountFromHook: account });
-
+    if (!account || !signer) throw new Error("Wallet not connected");
     console.log({ txFromHook: tx });
 
-    try {
-      // Encode the Transaction → Uint8Array
-      console.log("trying to encode");
+    // Sign the transaction
+    const [signedTx] = await signer.modifyAndSignTransactions([tx]);
+    console.log({ signedTxFromHook: signedTx });
 
-      const txBytes = codec.encode(tx);
-      console.log({ txBytesFromHook: txBytes });
+    const codec = getTransactionCodec();
+    const encodedTx = codec.encode(signedTx);
 
-      // @ts-expect-error wallet-standard method exists
-      const signed: Uint8Array = await account.signTransaction(txBytes);
-
-      console.log({ signedFromHook: signed });
-
-      return signed;
-    } catch (error: any) {
-      // Map errors in a friendly way
-      console.error("Transaction signing failed:", error);
-      throw new Error(error?.message || "Failed to sign transaction");
-    }
+    return new Uint8Array(encodedTx);
   }
 
-  return { account, signTransaction };
+  return { account, signTransaction, signer };
 }

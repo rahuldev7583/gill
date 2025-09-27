@@ -232,7 +232,7 @@ importers:
     dependencies:
       '@gillsdk/react':
         specifier: 'file:'
-        version: file:packages/react(@tanstack/react-query@5.61.4(react@18.3.1))(@types/react-dom@18.3.1)(@types/react@18.3.12)(gill@packages+gill)(react-dom@19.1.1(react@18.3.1))(react@18.3.1)(typescript@5.8.3)
+        version: file:packages/react(@tanstack/react-query@5.61.4(react@18.3.1))(@types/react-dom@18.3.1)(@types/react@18.3.12)(fastestsmallesttextencoderdecoder@1.0.22)(gill@packages+gill)(react-dom@19.1.1(react@18.3.1))(react@18.3.1)(typescript@5.8.3)
       '@nanostores/persistent':
         specifier: ^1.1.0
         version: 1.1.0(nanostores@1.0.1)
@@ -6219,10 +6219,11 @@ snapshots:
       '@shikijs/types': 3.4.2
       '@shikijs/vscode-textmate': 10.0.2
 
-  '@gillsdk/react@file:packages/react(@tanstack/react-query@5.61.4(react@18.3.1))(@types/react-dom@18.3.1)(@types/react@18.3.12)(gill@packages+gill)(react-dom@19.1.1(react@18.3.1))(react@18.3.1)(typescript@5.8.3)':
+  '@gillsdk/react@file:packages/react(@tanstack/react-query@5.61.4(react@18.3.1))(@types/react-dom@18.3.1)(@types/react@18.3.12)(fastestsmallesttextencoderdecoder@1.0.22)(gill@packages+gill)(react-dom@19.1.1(react@18.3.1))(react@18.3.1)(typescript@5.8.3)':
     dependencies:
       '@nanostores/persistent': 1.1.0(nanostores@1.0.1)
       '@nanostores/react': 1.0.0(nanostores@1.0.1)(react@18.3.1)
+      '@solana/react': 3.0.3(fastestsmallesttextencoderdecoder@1.0.22)(react@18.3.1)(typescript@5.8.3)
       '@solana/wallet-standard-chains': 1.1.1
       '@tanstack/react-query': 5.61.4(react@18.3.1)
       '@types/react': 18.3.12
@@ -6237,6 +6238,7 @@ snapshots:
       react: 18.3.1
       typescript: 5.8.3
     transitivePeerDependencies:
+      - fastestsmallesttextencoderdecoder
       - react-dom
 
   '@hapi/hoek@9.3.0': {}
@@ -7019,7 +7021,7 @@ snapshots:
 
   '@solana/errors@2.0.0-rc.4(typescript@5.8.3)':
     dependencies:
-      chalk: 5.4.1
+      chalk: 5.6.2
       commander: 12.1.0
       typescript: 5.8.3
 

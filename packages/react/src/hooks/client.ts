@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createSolanaClient, type SolanaClient } from "gill";
+import { ClusterType, createSolanaClient, type SolanaClient } from "gill";
+
 import { GILL_HOOK_CLIENT_KEY } from "../const.js";
 
 /**
@@ -7,13 +8,16 @@ import { GILL_HOOK_CLIENT_KEY } from "../const.js";
  */
 export function useSolanaClient(): SolanaClient {
   const { data: config } = useQuery<SolanaClient>({
-    queryKey: [GILL_HOOK_CLIENT_KEY],
-    staleTime: Infinity,
     // fallback data should not be reached if used within `SolanaProvider`
     // since we set the initial value. but just in case => devnet
     initialData: createSolanaClient({
+      cluster: ClusterType.Devnet,
       urlOrMoniker: "devnet",
     }),
+
+    queryKey: [GILL_HOOK_CLIENT_KEY],
+
+    staleTime: Infinity,
   });
   return config;
 }

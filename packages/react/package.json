@@ -63,11 +63,6 @@
     "supports bigint and not dead",
     "maintained node versions"
   ],
-  "devDependencies": {
-    "@types/react": "^18",
-    "@types/react-test-renderer": "^18",
-    "react": "^18"
-  },
   "dependencies": {
     "@gillsdk/react": "file:",
     "@nanostores/persistent": "^1.1.0",
