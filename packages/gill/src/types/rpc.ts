@@ -1,14 +1,14 @@
 import type {
-  createSolanaRpc,
-  createSolanaRpcSubscriptions,
-  DevnetUrl,
-  MainnetUrl,
-  RpcFromTransport,
-  RpcSubscriptions,
-  RpcTransportFromClusterUrl,
-  SolanaRpcApiFromTransport,
-  SolanaRpcSubscriptionsApi,
-  TestnetUrl,
+    createSolanaRpc,
+    createSolanaRpcSubscriptions,
+    DevnetUrl,
+    MainnetUrl,
+    RpcFromTransport,
+    RpcSubscriptions,
+    RpcTransportFromClusterUrl,
+    SolanaRpcApiFromTransport,
+    SolanaRpcSubscriptionsApi,
+    TestnetUrl,
 } from "@solana/kit";
 import { SendAndConfirmTransactionWithSignersFunction } from "../core/send-and-confirm-transaction-with-signers";
 import type { SimulateTransactionFunction } from "../core/simulate-transaction";
@@ -24,7 +24,15 @@ export type ModifiedClusterUrl = MainnetUrl | DevnetUrl | TestnetUrl | LocalnetU
 
 export type SolanaClientUrlOrMoniker = SolanaClusterMoniker | URL | ModifiedClusterUrl;
 
+export enum Cluster {
+  Mainnet = "mainnet",
+  Devnet = "devnet",
+  Localnet = "localnet",
+  Testnet = "testnet",
+}
+
 export type CreateSolanaClientArgs<TClusterUrl extends SolanaClientUrlOrMoniker = GenericUrl> = {
+    cluster: Cluster,
   /** Full RPC URL (for a private RPC endpoint) or the Solana moniker (for a public RPC endpoint) */
   urlOrMoniker: SolanaClientUrlOrMoniker | TClusterUrl;
   /** Configuration used to create the `rpc` client */
@@ -34,6 +42,7 @@ export type CreateSolanaClientArgs<TClusterUrl extends SolanaClientUrlOrMoniker 
 };
 
 export type SolanaClient<TClusterUrl extends ModifiedClusterUrl | string = string> = {
+    cluster: Cluster,
   /** Used to make RPC calls to your RPC provider */
   rpc: RpcFromTransport<
     SolanaRpcApiFromTransport<RpcTransportFromClusterUrl<TClusterUrl>>,
