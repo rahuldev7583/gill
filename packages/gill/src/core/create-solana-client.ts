@@ -1,7 +1,7 @@
 import type { DevnetUrl, MainnetUrl, TestnetUrl } from "@solana/kit";
 import { createSolanaRpc, createSolanaRpcSubscriptions } from "@solana/kit";
 
-import type { Cluster, CreateSolanaClientArgs, LocalnetUrl, ModifiedClusterUrl, SolanaClient } from "../types/rpc";
+import type { CreateSolanaClientArgs, LocalnetUrl, ModifiedClusterUrl, SolanaClient } from "../types/rpc";
 import { getPublicSolanaRpcUrl } from "./rpc";
 import { sendAndConfirmTransactionWithSignersFactory } from "./send-and-confirm-transaction-with-signers";
 import { simulateTransactionFactory } from "./simulate-transaction";
@@ -11,25 +11,25 @@ import { simulateTransactionFactory } from "./simulate-transaction";
  */
 export function createSolanaClient(
   props: Omit<CreateSolanaClientArgs<MainnetUrl | "mainnet">, "urlOrMoniker"> & {
-    cluster: Cluster.Mainnet;
+    cluster: "mainnet",
     urlOrMoniker: "mainnet";
   },
 ): SolanaClient<MainnetUrl>;
 export function createSolanaClient(
   props: Omit<CreateSolanaClientArgs<DevnetUrl | "devnet">, "urlOrMoniker"> & {
-    cluster: Cluster.Devnet;
+    cluster: "devnet",
     urlOrMoniker: "devnet";
   },
 ): SolanaClient<DevnetUrl>;
 export function createSolanaClient(
   props: Omit<CreateSolanaClientArgs<TestnetUrl | "testnet">, "urlOrMoniker"> & {
-    cluster: Cluster.Testnet;
+    cluster: "testnet";
     urlOrMoniker: "testnet";
   },
 ): SolanaClient<TestnetUrl>;
 export function createSolanaClient(
   props: Omit<CreateSolanaClientArgs<LocalnetUrl | "localnet">, "urlOrMoniker"> & {
-    cluster: Cluster.Localnet;
+    cluster: "localnet";
     urlOrMoniker: "localnet";
   },
 ): SolanaClient<LocalnetUrl>;
@@ -41,7 +41,7 @@ export function createSolanaClient<TCluster extends ModifiedClusterUrl>({
   urlOrMoniker,
   rpcConfig,
   rpcSubscriptionsConfig,
-}: CreateSolanaClientArgs<TCluster> & { cluster: Cluster}) {
+}: CreateSolanaClientArgs<TCluster>) {
   if (!urlOrMoniker) throw new Error("Cluster url or moniker is required");
   if (urlOrMoniker instanceof URL == false) {
     try {

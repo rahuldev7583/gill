@@ -24,15 +24,10 @@ export type ModifiedClusterUrl = MainnetUrl | DevnetUrl | TestnetUrl | LocalnetU
 
 export type SolanaClientUrlOrMoniker = SolanaClusterMoniker | URL | ModifiedClusterUrl;
 
-export enum Cluster {
-  Mainnet = "mainnet",
-  Devnet = "devnet",
-  Localnet = "localnet",
-  Testnet = "testnet",
-}
+export type Cluster = "devnet" | "localnet" | "mainnet" | "testnet";
 
 export type CreateSolanaClientArgs<TClusterUrl extends SolanaClientUrlOrMoniker = GenericUrl> = {
-    cluster: Cluster,
+    cluster: Cluster;
   /** Full RPC URL (for a private RPC endpoint) or the Solana moniker (for a public RPC endpoint) */
   urlOrMoniker: SolanaClientUrlOrMoniker | TClusterUrl;
   /** Configuration used to create the `rpc` client */
