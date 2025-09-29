@@ -4,6 +4,7 @@ export * from "./client.js";
 export * from "./latest-blockhash.js";
 export * from "./program-accounts.js";
 export * from "./recent-prioritization-fees.js";
+export * from "./sign-and-send-transaction.js";
 export * from "./signature-statuses.js";
 export * from "./signatures-for-address.js";
 export * from "./signTransaction.js";
@@ -12,3 +13,4 @@ export * from "./token-account.js";
 export * from "./token-mint.js";
 export * from "./transaction.js";
 export * from "./wallet.js";
+
